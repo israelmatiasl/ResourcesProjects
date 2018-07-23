@@ -1,0 +1,87 @@
+﻿@model jQuery.ViewModel.ListUsuarioViewModel
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+<h2>Usuarios</h2>
+
+<br />
+
+<table class="table table-hover">
+    <thead class="bg-primary">
+        <tr>
+            <th>Nombres</th>
+            <th>Documento</th>
+            <th>Email</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody class="bg-info">
+        @foreach(var item in Model.usuarios)
+        {
+            <tr>
+                <td>@item.name @item.lastname</td>
+                <td>@item.document</td>
+                <td>@item.email</td>
+                <td>@item.username</td>
+                <td>@item.role</td>
+                <td>@item.status</td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteUser(@item.id)">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts{
+    
+    <script>
+        function deleteUser(id) {
+            swal({
+                title: 'Está seguro de eliminar?',
+                text: "Luego podrá revertir el cambio!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Eliminar de todas formas',
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+                if (result.value) {
+                    var url = "@Url.Action("deleteUser", "Home")";
+                    var data = { id: id };
+                    $.post(url, data).done(function (response) {
+                        if (response.ok) {
+                            swal({
+                                title: 'Eliminado',
+                                type: 'success',
+                                showCancelButton: false
+                            }).then((res) => {
+                                if (res.value) {
+                                    window.location.href = "@Url.Action("Usuarios", "Home")";
+                                }
+                            });
+                        }
+                        else {
+                            swal('Ups!', response.message, 'error')
+                        }
+                    }).fail(function () {
+                        swal('Ups!', 'Ocurrió un error!', 'error')
+                        }).always(function () {
+                            setTimeout(function () {
+                                window.location.href = "@Url.Action("Usuarios", "Home")";
+                            }, 2000)
+                    });
+                }
+            })
+        }
+        
+    </script>
+}

@@ -1,0 +1,47 @@
+﻿@model TextboxAutocomplete.ViewModel.CiudadesViewModel.AddEditCiudadViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Nueva Ciudad</h2>
+        <form @Url.Action("Index", "Home") method="post">
+            <div class="form-group">
+                <label>Nombre de la Ciudad</label>
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                @Html.TextBoxFor(x => x.pais, new { @class = "form-control", @id = "paisName", @name = "paisName" })
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#paisName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Home/getPaises",
+                        type: "POST",
+                        dataType: "json",
+                        data: { name: request.term },
+                        success: function (result) {
+                            response($.map(result, function (item) {
+                                return { label: item, value: item };
+                            }));
+                        }
+                    });
+                },
+                minLength: 2
+            });
+        });
+
+    </script>
+}

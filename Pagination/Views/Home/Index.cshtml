@@ -1,0 +1,70 @@
+﻿@model Pagination.ViewModel.UserViewModel.ListUserViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <h2>Filtros</h2>
+    <div class="col-md-12">
+        <form method="get" id="searchStudent">
+            <div class="form-group">
+                <label>Estado</label>
+                @Html.DropDownListFor(x => x.status, Model.listStatus, "Seleccione un estado", new { @class = "form-control", @id = "searchByStatus" })
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                @Html.DropDownListFor(x => x.role, Model.listRoles, "Seleccione un rol", new { @class = "form-control", @id = "searchByRole" })
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success" type="submit">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Listado filtrado</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Nombres</td>
+                    <td>Usuario</td>
+                    <td>Rol</td>
+                    <td>Estado</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model.usuarios)
+                {
+                    <tr>
+                        <td>@i.id</td>
+                        <td>@i.name</td>
+                        <td>@i.username</td>
+                        <td>@i.role</td>
+                        <td>@i.status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@{ Html.RenderPartial("_pager", Model); }
+
+@section scripts {
+    
+    <script>
+        $(document).ready(function () {
+            $("#searchStudent").submit(function () {
+                if ($("#searchByStatus").val() == "") {
+                    $("#searchByStatus").remove();
+                }
+                if ($("#searchByRole").val() == "") {
+                    $("#searchByRole").remove();
+                }
+            });
+        })
+    </script>
+}
